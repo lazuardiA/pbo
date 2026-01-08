@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>One Piece - Login System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        #app {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            border: 3px solid #ffffff;
+            border-radius: 15px;
+            padding: 50px 40px;
+            width: 100%;
+            max-width: 420px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            text-align: center;
+        }
+
+        h2 {
+            color: #ffffff;
+            font-size: 32px;
+            margin-bottom: 30px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+        }
+
+        input {
+            width: 100%;
+            padding: 13px 15px;
+            margin-bottom: 15px;
+            border: 2px solid #ffffff;
+            background: rgba(26, 26, 46, 0.8);
+            border-radius: 8px;
+            font-size: 14px;
+            color: #fff;
+            transition: all 0.3s ease;
+        }
+
+        input::placeholder {
+            color: #666;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #ffffff;
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.4);
+            background: rgba(26, 26, 46, 1);
+        }
+
+        button {
+            width: 100%;
+            padding: 13px;
+            background: linear-gradient(135deg, #ffffff 0%, #e0e0e0 100%);
+            color: #000;
+            border: 2px solid #ffffff;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(255, 255, 255, 0.3);
+            margin-top: 15px;
+        }
+
+        button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(255, 255, 255, 0.5);
+        }
+
+        button:active {
+            transform: translateY(-1px);
+        }
+
+        .logout {
+            background: linear-gradient(135deg, #ff4444 0%, #cc0000 100%);
+            color: white;
+            border-color: #ff4444;
+            box-shadow: 0 4px 15px rgba(255, 68, 68, 0.3);
+        }
+
+        .logout:hover {
+            background: linear-gradient(135deg, #ff6666 0%, #dd0000 100%);
+            box-shadow: 0 6px 20px rgba(255, 68, 68, 0.5);
+        }
+
+        p {
+            color: #fff;
+            font-size: 16px;
+            margin: 20px 0;
+            line-height: 1.6;
+        }
+
+        b {
+            color: #ffffff;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .success-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div id="app"></div>
+
+    <script>
+        class App {
+            constructor(id) {
+                this.el = document.getElementById(id);
+                if (!localStorage.getItem("users")) {
+                    localStorage.setItem("users", JSON.stringify([
+                        { username: "lazuardi123", password: "Zuu0001" }
+                    ]));
+                }
+                this.loginForm();
+            }
+
+            loginForm() {
+                this.el.innerHTML = `
+                    <h2>🏴‍☠️ LOGIN 🏴‍☠️</h2>
+                    <input id="u" placeholder="Username" autofocus>
+                    <input id="p" type="password" placeholder="Password">
+                    <button id="btn">⚓ SIGN IN</button>
+                `;
+                document.getElementById("btn").onclick = () => this.login();
+                document.getElementById("p").onkeypress = (e) => {
+                    if (e.key === "Enter") this.login();
+                };
+            }
+
+            login() {
+                const u = document.getElementById("u").value.trim();
+                const p = document.getElementById("p").value.trim();
+                const users = JSON.parse(localStorage.getItem("users"));
+                const ok = users.find(x => x.username === u && x.password === p);
+                
+                if (!ok) {
+                    alert("❌ Login gagal! Username atau password salah.");
+                    document.getElementById("u").value = "";
+                    document.getElementById("p").value = "";
+                } else {
+                    this.success(ok.username);
+                }
+            }
+
+            success(name) {
+                this.el.innerHTML = `
+                    <div class="success-icon">🎉</div>
+                    <h2>LOGIN BERHASIL ✓</h2>
+                    <p style="text-align:center; margin: 25px 0;">
+                        Selamat datang <b>${name}</b>
+                    </p>
+                    <p style="font-size: 14px; color: #999;">
+                        Anda telah masuk ke dalam sistem!
+                    </p>
+                    <button class="logout" id="out">🚪 LOGOUT</button>
+                `;
+                document.getElementById("out").onclick = () => this.loginForm();
+            }
+        }
+
+        new App("app");
+    </script>
+</body>
+</html>
